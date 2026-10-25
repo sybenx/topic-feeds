@@ -57,6 +57,7 @@ The shape is stable: fields may be added, never renamed or removed, without bump
       "published": "2026-10-25T16:05:15Z",
       "first_seen": 1792945147,
       "discussion": null,
+      "discussions": [],
       "topic": "news"
     }
   ]
@@ -73,15 +74,26 @@ The shape is stable: fields may be added, never renamed or removed, without bump
 | `source` | where it came from; `home` is the source's front page |
 | `published_at` / `published` | publish time, unix seconds / ISO 8601 (UTC). Future dates are clamped. |
 | `first_seen` | unix seconds when this pool first saw the item |
-| `discussion` | comments page (Hacker News, Lobsters, Stacker News) when it differs from `url`, else `null` |
+| `discussion` | the first discussion page's URL (same as `discussions[0].url`), or `null`. Kept for older readers. |
+| `discussions` | where this article is being discussed, oldest first; always present, `[]` when none. Each is `{ "url", "site", "comments"? }`: `site` is e.g. `"Hacker News"`, `"Lobsters"`, `"Stacker News"`, `"r/selfhosted"`; `comments` is the comment count when the feed gives one (Hacker News does; Lobsters, Stacker News and Reddit feeds don't) and is left out otherwise. Collected across all topics, so a Verge article that's also on Hacker News carries the Hacker News link. |
 | `topic` | topic id |
 
 Items are newest first.
+
+Example `discussions`:
+
+```json
+[
+  { "url": "https://stacker.news/items/1601314", "site": "Stacker News" },
+  { "url": "https://news.ycombinator.com/item?id=50229587", "site": "Hacker News", "comments": 374 }
+]
+```
 
 ## What's in a feed
 
 - Last 72 hours; slow sources (weekly newsletters, release notes) keep items up to 8 days so the topic isn't empty. `window_hours` is the longest window in that topic.
 - Deduplicated within a topic by canonical URL and by near-identical title (≥80% of words shared). The same link can appear in two topics.
+- Aggregator items (Hacker News, Lobsters, Stacker News, Reddit) point `url` at the article itself and the thread goes in `discussions`. If the same article also comes from its own site in that topic, that site's card is kept and the aggregators' threads are added to it. Reddit image, video and gallery posts keep the thread as `url`.
 - Caps, so a busy source can't flood a topic: by default 6 items per source per day, 20 per topic per day, 60 per topic in total. General news: 2 per source, 5 per day, 15 in total. Overrides are in `sources.json`.
 - Within a cap, earlier-seen items win and stay; an item never drops out before its window ends unless the topic total is full.
 - Hacker News only includes stories with 300+ points.

@@ -199,15 +199,25 @@ function parseFeed(xml, src) {
   const out = [];
   entries.slice(0, FEED_ITEMS_MAX).forEach((e, rank) => {
     const title = trim(plain(text(e.title)), 200);
-    const link = entryLink(e);
-    const canon = canonical(link);
-    if (!title || !canon) return;
     const rich = text(e['content:encoded']) || text(e.content) || '';
     const desc = text(e.description) || text(e.summary) || text(e['media:group']?.['media:description']) || '';
+    let link = entryLink(e);
+    let comments = decode(text(first(e.comments))).trim();
+    // Reddit: the entry links to the thread; the article is the "[link]" anchor in the body.
+    const html = decode(rich + desc);
+    const redditLink = html.match(/<a href="([^"]+)">\[link\]<\/a>/);
+    // Image, video and gallery posts keep the thread as the link.
+    const media = /^https:\/\/((i|v|preview)\.redd\.it\/|(www\.)?reddit\.com\/gallery\/)/;
+    if (redditLink && canonical(redditLink[1]) && canonical(redditLink[1]) !== canonical(link) && !media.test(decode(redditLink[1]))) {
+      comments = link;
+      link = redditLink[1];
+    }
+    const canon = canonical(link);
+    if (!title || !canon) return;
     // Summary only from the short description. Fall back to the start of the body, trimmed hard; never the full text.
     const summary = cleanSummary(plain(desc || rich), title);
-    const comments = decode(text(first(e.comments))).trim();
-    const discussion = comments && canonical(comments) !== canon ? comments : null;
+    const discussion = comments && canonical(comments) && canonical(comments) !== canon ? comments : null;
+    const count = text(e['slash:comments']) || plain(desc).match(/# Comments: (\d+)/)?.[1]; // hnrss puts it in the description
     out.push({
       rank,
       id: idOf(canon),
@@ -218,6 +228,7 @@ function parseFeed(xml, src) {
       image: entryImage(e, rich + desc, link),
       published_at: parseDate(e.pubDate ?? e.published ?? e['dc:date'] ?? e.updated),
       discussion,
+      comments: discussion && count ? Number(count) : null,
     });
   });
   return out;
@@ -240,10 +251,12 @@ async function fetchSource(topic, src) {
   const t0 = Date.now();
   try {
     let r = await fetchText(src.feed, headers).catch(() => null);
-    if (!r || r.status >= 500) {
-      await new Promise((ok) => setTimeout(ok, 3000));
-      r = await fetchText(src.feed, headers);
+    for (const wait of [3000, 10000]) {
+      if (r && r.status < 500) break;
+      await new Promise((ok) => setTimeout(ok, wait));
+      r = await fetchText(src.feed, headers).catch(() => null);
     }
+    if (!r) throw new Error('network error');
     if (r.status === 304) {
       state.http[src.feed] = { ...h, fetchedAt: now };
       return { status: 304, entries: null, ms: Date.now() - t0 };
@@ -340,9 +353,12 @@ function select(topic) {
   const cands = Object.values(state.items)
     .filter((it) => it.topic === topic.id)
     .sort((a, b) => a.first_seen - b.first_seen || a.rank - b.rank || b.published_at - a.published_at);
+  // Same article from its own site and from an aggregator: keep the site's card (discussions are attached later).
+  const best = {};
+  for (const it of cands) if (!best[it.canon] || (best[it.canon].discussion && !it.discussion)) best[it.canon] = it;
   const kept = [], seenUrl = new Set(), titles = [], srcDay = {}, topicDay = {};
   for (const it of cands) {
-    if (seenUrl.has(it.canon)) continue;
+    if (seenUrl.has(it.canon) || best[it.canon] !== it) continue;
     const words = titleWords(it.title);
     if (titles.some((w) => nearSameTitle(w, words))) continue;
     const src = sourceById[it.source].src;
@@ -370,8 +386,29 @@ for (const c of Object.keys(state.og)) if (!live.has(c)) delete state.og[c];
 
 const iso = (t) => new Date(t * 1000).toISOString().replace('.000Z', 'Z');
 
+// Discussion pages per article, from every aggregator item in the pool (any topic),
+// so an article from a normal site also shows "Discussed on Hacker News · Stacker News".
+const SITES = { 'news.ycombinator.com': 'Hacker News', 'lobste.rs': 'Lobsters', 'stacker.news': 'Stacker News' };
+
+function siteName(u, src) {
+  const url = new URL(u);
+  const host = url.hostname.replace(/^www\.|^old\./, '');
+  if (host === 'reddit.com') return url.pathname.match(/^\/r\/[^/]+/)?.[0].slice(1) || 'Reddit';
+  return SITES[host] || src.name;
+}
+
+const discussionsByCanon = {};
+for (const it of Object.values(state.items).sort((a, b) => a.first_seen - b.first_seen)) {
+  if (!it.discussion) continue;
+  const list = (discussionsByCanon[it.canon] ||= []);
+  const key = canonical(it.discussion);
+  if (list.some((d) => d.key === key)) continue;
+  list.push({ key, url: it.discussion, site: siteName(it.discussion, sourceById[it.source].src), comments: it.comments ?? null });
+}
+
 function card(it, topic) {
   const { src } = sourceById[it.source];
+  const discussions = (discussionsByCanon[it.canon] || []).map(({ key, ...d }) => (d.comments == null ? { url: d.url, site: d.site } : d));
   return {
     id: it.id,
     url: it.url,
@@ -382,7 +419,8 @@ function card(it, topic) {
     published_at: it.published_at,
     published: iso(it.published_at),
     first_seen: it.first_seen,
-    discussion: it.discussion || null,
+    discussion: it.discussion || discussions[0]?.url || null,
+    discussions,
     topic: topic.id,
   };
 }

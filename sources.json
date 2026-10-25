@@ -36,7 +36,7 @@
     {
       "id": "software", "name": "Building software",
       "sources": [
-        { "id": "hn", "name": "Hacker News", "home": "https://news.ycombinator.com", "feed": "https://hnrss.org/newest?points=300&count=50" },
+        { "id": "hn", "name": "Hacker News", "home": "https://news.ycombinator.com", "feed": "https://hnrss.org/newest?points=300" },
         { "id": "lobsters", "name": "Lobsters", "home": "https://lobste.rs", "feed": "https://lobste.rs/rss" },
         { "id": "github-changelog", "name": "GitHub Changelog", "home": "https://github.blog/changelog/", "feed": "https://github.blog/changelog/feed/", "perSourcePerDay": 3 },
         { "id": "lwn", "name": "LWN", "home": "https://lwn.net", "feed": "https://lwn.net/headlines/rss", "perSourcePerDay": 4 }
