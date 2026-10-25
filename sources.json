@@ -6,7 +6,7 @@
       "sources": [
         { "id": "simonwillison", "name": "Simon Willison", "home": "https://simonwillison.net", "feed": "https://simonwillison.net/atom/everything/" },
         { "id": "huggingface", "name": "Hugging Face", "home": "https://huggingface.co/blog", "feed": "https://huggingface.co/blog/feed.xml", "windowHours": 168, "perSourcePerDay": 2 },
-        { "id": "importai", "name": "Import AI", "home": "https://importai.substack.com", "feed": "https://importai.substack.com/feed", "windowHours": 192 },
+        { "id": "importai", "name": "Import AI", "home": "https://jack-clark.net", "feed": "https://jack-clark.net/feed/", "windowHours": 192 },
         { "id": "ars-ai", "name": "Ars Technica", "home": "https://arstechnica.com/ai/", "feed": "https://arstechnica.com/ai/feed/" }
       ]
     },
