@@ -1,0 +1,103 @@
+{
+  "defaults": { "windowHours": 72, "perSourcePerDay": 6, "perTopicPerDay": 20, "maxItems": 60 },
+  "topics": [
+    {
+      "id": "ai", "name": "AI and agents",
+      "sources": [
+        { "id": "simonwillison", "name": "Simon Willison", "home": "https://simonwillison.net", "feed": "https://simonwillison.net/atom/everything/" },
+        { "id": "huggingface", "name": "Hugging Face", "home": "https://huggingface.co/blog", "feed": "https://huggingface.co/blog/feed.xml", "windowHours": 168, "perSourcePerDay": 2 },
+        { "id": "importai", "name": "Import AI", "home": "https://importai.substack.com", "feed": "https://importai.substack.com/feed", "windowHours": 192 },
+        { "id": "ars-ai", "name": "Ars Technica", "home": "https://arstechnica.com/ai/", "feed": "https://arstechnica.com/ai/feed/" }
+      ]
+    },
+    {
+      "id": "nostr", "name": "Nostr apps",
+      "sources": [
+        { "id": "sn-nostr", "name": "Stacker News", "home": "https://stacker.news/~nostr", "feed": "https://stacker.news/~nostr/rss", "windowHours": 168, "perSourcePerDay": 10 }
+      ]
+    },
+    {
+      "id": "games", "name": "Games and game making",
+      "sources": [
+        { "id": "gamedeveloper", "name": "Game Developer", "home": "https://www.gamedeveloper.com", "feed": "https://www.gamedeveloper.com/rss.xml" },
+        { "id": "rps", "name": "Rock Paper Shotgun", "home": "https://www.rockpapershotgun.com", "feed": "https://www.rockpapershotgun.com/feed" },
+        { "id": "80lv", "name": "80 Level", "home": "https://80.lv", "feed": "https://80.lv/feed" },
+        { "id": "godot", "name": "Godot", "home": "https://godotengine.org/blog/", "feed": "https://godotengine.org/rss.xml", "windowHours": 192 }
+      ]
+    },
+    {
+      "id": "bitcoin", "name": "Bitcoin",
+      "sources": [
+        { "id": "optech", "name": "Bitcoin Optech", "home": "https://bitcoinops.org", "feed": "https://bitcoinops.org/feed.xml", "windowHours": 192 },
+        { "id": "bitcoinmagazine", "name": "Bitcoin Magazine", "home": "https://bitcoinmagazine.com", "feed": "https://bitcoinmagazine.com/feed" },
+        { "id": "sn-bitcoin", "name": "Stacker News", "home": "https://stacker.news/~bitcoin", "feed": "https://stacker.news/~bitcoin/rss" }
+      ]
+    },
+    {
+      "id": "software", "name": "Building software",
+      "sources": [
+        { "id": "hn", "name": "Hacker News", "home": "https://news.ycombinator.com", "feed": "https://hnrss.org/newest?points=300&count=50" },
+        { "id": "lobsters", "name": "Lobsters", "home": "https://lobste.rs", "feed": "https://lobste.rs/rss" },
+        { "id": "github-changelog", "name": "GitHub Changelog", "home": "https://github.blog/changelog/", "feed": "https://github.blog/changelog/feed/", "perSourcePerDay": 3 },
+        { "id": "lwn", "name": "LWN", "home": "https://lwn.net", "feed": "https://lwn.net/headlines/rss", "perSourcePerDay": 4 }
+      ]
+    },
+    {
+      "id": "privacy", "name": "Privacy and security",
+      "sources": [
+        { "id": "krebs", "name": "Krebs on Security", "home": "https://krebsonsecurity.com", "feed": "https://krebsonsecurity.com/feed/", "windowHours": 168 },
+        { "id": "bleepingcomputer", "name": "BleepingComputer", "home": "https://www.bleepingcomputer.com", "feed": "https://www.bleepingcomputer.com/feed/" },
+        { "id": "eff", "name": "EFF", "home": "https://www.eff.org", "feed": "https://www.eff.org/rss/updates.xml", "perSourcePerDay": 3 },
+        { "id": "grapheneos", "name": "GrapheneOS", "home": "https://grapheneos.org/releases", "feed": "https://grapheneos.org/releases.atom", "windowHours": 168, "perSourcePerDay": 2 }
+      ]
+    },
+    {
+      "id": "gadgets", "name": "Phones and gadgets",
+      "sources": [
+        { "id": "verge", "name": "The Verge", "home": "https://www.theverge.com", "feed": "https://www.theverge.com/rss/index.xml" },
+        { "id": "androidpolice", "name": "Android Police", "home": "https://www.androidpolice.com", "feed": "https://www.androidpolice.com/feed/" },
+        { "id": "9to5mac", "name": "9to5Mac", "home": "https://9to5mac.com", "feed": "https://9to5mac.com/feed/" },
+        { "id": "ars-gadgets", "name": "Ars Technica", "home": "https://arstechnica.com/gadgets/", "feed": "https://arstechnica.com/gadgets/feed/" }
+      ]
+    },
+    {
+      "id": "selfhosting", "name": "Self-hosting",
+      "sources": [
+        { "id": "selfhst", "name": "selfh.st", "home": "https://selfh.st/weekly/", "feed": "https://selfh.st/weekly/rss/", "windowHours": 192 },
+        { "id": "r-selfhosted", "name": "r/selfhosted", "home": "https://www.reddit.com/r/selfhosted/", "feed": "https://www.reddit.com/r/selfhosted/top/.rss?t=week", "windowHours": 168, "everyHours": 4 }
+      ]
+    },
+    {
+      "id": "food", "name": "Food",
+      "sources": [
+        { "id": "thekitchn", "name": "The Kitchn", "home": "https://www.thekitchn.com", "feed": "https://www.thekitchn.com/main.rss" },
+        { "id": "smittenkitchen", "name": "Smitten Kitchen", "home": "https://smittenkitchen.com", "feed": "https://smittenkitchen.com/feed/", "windowHours": 192 },
+        { "id": "budgetbytes", "name": "Budget Bytes", "home": "https://www.budgetbytes.com", "feed": "https://www.budgetbytes.com/feed/", "windowHours": 168 }
+      ]
+    },
+    {
+      "id": "art", "name": "Art and design",
+      "sources": [
+        { "id": "colossal", "name": "Colossal", "home": "https://www.thisiscolossal.com", "feed": "https://www.thisiscolossal.com/feed/" },
+        { "id": "itsnicethat", "name": "It's Nice That", "home": "https://www.itsnicethat.com", "feed": "https://www.itsnicethat.com/articles.rss" },
+        { "id": "dezeen", "name": "Dezeen", "home": "https://www.dezeen.com", "feed": "https://www.dezeen.com/feed/" }
+      ]
+    },
+    {
+      "id": "photos", "name": "Photos and places",
+      "sources": [
+        { "id": "atlasobscura", "name": "Atlas Obscura", "home": "https://www.atlasobscura.com", "feed": "https://www.atlasobscura.com/feeds/latest" },
+        { "id": "nasa-iotd", "name": "NASA Image of the Day", "home": "https://www.nasa.gov/image-of-the-day/", "feed": "https://www.nasa.gov/feeds/iotd-feed/", "windowHours": 120, "everyHours": 2 },
+        { "id": "petapixel", "name": "PetaPixel", "home": "https://petapixel.com", "feed": "https://petapixel.com/feed/" }
+      ]
+    },
+    {
+      "id": "news", "name": "General news", "perTopicPerDay": 5, "maxItems": 15,
+      "sources": [
+        { "id": "bbc-world", "name": "BBC News", "home": "https://www.bbc.com/news/world", "feed": "https://feeds.bbci.co.uk/news/world/rss.xml", "perSourcePerDay": 2 },
+        { "id": "npr", "name": "NPR", "home": "https://www.npr.org", "feed": "https://feeds.npr.org/1001/rss.xml", "perSourcePerDay": 2 },
+        { "id": "guardian-world", "name": "The Guardian", "home": "https://www.theguardian.com/world", "feed": "https://www.theguardian.com/world/rss", "perSourcePerDay": 2 }
+      ]
+    }
+  ]
+}

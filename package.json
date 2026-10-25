@@ -1,0 +1,14 @@
+{
+  "name": "topic-feeds",
+  "version": "1.0.0",
+  "description": "Public topic feeds (link cards) built from RSS",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "type": "module",
+  "dependencies": {
+    "fast-xml-parser": "^5.11.2"
+  },
+  "private": true,
+  "license": "MIT"
+}
